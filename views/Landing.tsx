@@ -73,31 +73,68 @@ export const Landing: React.FC<LandingProps> = ({ onStart, onLogin }) => {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="bg-brand-secondary py-32 text-white">
-        <div className="max-w-7xl mx-auto px-6">
-           <div className="text-center mb-20">
-              <h2 className="text-4xl font-black mb-4 tracking-tight">Clinical Grade Capabilities</h2>
-              <p className="text-brand-primary font-bold uppercase tracking-widest text-sm">Beyond a simple calorie counter</p>
+      {/* Clinical Grade Capabilities */}
+      <section className="bg-brand-secondary py-32 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="w-64 h-64 bg-brand-primary/40 rounded-full blur-3xl -top-10 -left-10 absolute" />
+          <div className="w-72 h-72 bg-brand-accent/30 rounded-full blur-3xl -bottom-16 -right-10 absolute" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+           <div className="text-center mb-20 space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 text-[11px] font-black uppercase tracking-[0.25em]">
+                <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" />
+                <span>Clinical Grade Platform</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight">
+                Clinical Grade <span className="text-brand-primary">Capabilities</span>
+              </h2>
+              <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base font-medium">
+                Designed with clinicians to move beyond “wellness apps” — NutriPath AI structures your data, flags risk,
+                and generates reports that can live in a real care pathway.
+              </p>
            </div>
            <div className="grid md:grid-cols-3 gap-8">
               {[
-                { title: 'Pathology Specific', desc: 'Custom engines for T2 Diabetes, Obesity, and CVD built by dietitians.', icon: 'M19.428 15.428a2 2 0 00-1.022-.547' },
-                { title: 'Real-time Bio-sync', desc: 'Sync your glucose monitor or blood pressure cuff for dynamic meal adjustments.', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-                { title: 'Neural Meal Logic', desc: 'Log food via photos. Our AI breaks down clinical impacts, not just macros.', icon: 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89' },
+                { 
+                  title: 'Pathology-Specific Engines', 
+                  tag: 'T2D • Obesity • CVD',
+                  desc: 'Condition-specific nutrition engines tuned on clinical guidelines, not generic wellness blogs.', 
+                  icon: 'M13 16h-1v-4H8l4-8h1v4h4l-4 8z' 
+                },
+                { 
+                  title: 'Real-Time Bio-Sync', 
+                  tag: 'CGM • BP • Labs',
+                  desc: 'Integrate glucose, blood pressure, and lab trends to adapt meal plans around your actual physiology.', 
+                  icon: 'M5 13l4 4L19 7' 
+                },
+                { 
+                  title: 'Clinician-Ready Reports', 
+                  tag: 'PDF • Timeline • Rationale',
+                  desc: 'Automatically structured summaries with biometrics, risk scores, and AI rationale to share with care teams.', 
+                  icon: 'M9 12l2 2 4-4m2-2a9 9 0 11-6.219-2.781' 
+                },
               ].map((feat, i) => (
-                <div key={i} className="p-10 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 transition group">
-                   <div className="w-14 h-14 bg-brand-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feat.icon} />
-                      </svg>
+                <div 
+                  key={i} 
+                  className="p-10 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-white/10 hover:border-brand-primary/60 transition group flex flex-col justify-between"
+                >
+                   <div>
+                     <div className="w-14 h-14 bg-brand-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-brand-primary/40">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feat.icon} />
+                        </svg>
+                     </div>
+                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary mb-2">
+                       {feat.tag}
+                     </p>
+                     <h3 className="text-xl font-bold mb-3">{feat.title}</h3>
+                     <p className="text-slate-300 leading-relaxed text-sm">{feat.desc}</p>
                    </div>
-                   <h3 className="text-xl font-bold mb-3">{feat.title}</h3>
-                   <p className="text-slate-300 leading-relaxed">{feat.desc}</p>
+                   <div className="mt-6 h-px w-16 bg-gradient-to-r from-brand-primary to-transparent opacity-70 group-hover:w-24 transition-all" />
                 </div>
               ))}
            </div>
-        </div>
+          </div>
       </section>
       
       {/* Footer */}

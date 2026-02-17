@@ -127,7 +127,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
         ))}
       </div>
 
-      {/* REFINED CLINICAL HUB: Status Shield */}
+      {/* CLINICAL GRADE CAPABILITIES */}
       <div className="bg-white rounded-[3rem] overflow-hidden border border-slate-100 shadow-xl shadow-brand-primary/5 p-8 lg:p-12 relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         
@@ -135,28 +135,39 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
            <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-1">
                  <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse"></span>
-                 <span className="text-brand-primary text-[9px] font-black uppercase tracking-widest">Medical Grade Protocol Active</span>
+                 <span className="text-brand-primary text-[9px] font-black uppercase tracking-widest">Clinical Grade Capabilities</span>
               </div>
-              <h2 className="text-3xl font-black text-brand-secondary tracking-tight italic">Intelligence <span className="text-brand-primary not-italic">Bio-Analytique</span></h2>
+              <h2 className="text-3xl font-black text-brand-secondary tracking-tight">
+                Plateforme de <span className="text-brand-primary">décision clinique</span>
+              </h2>
+              <p className="text-slate-500 text-xs max-w-xl mx-auto">
+                Analyses biométriques, scoring de risque et rapports partageables, avec un niveau de fiabilité proche d’un service hospitalier.
+              </p>
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch w-full">
               
               {/* Left Column: Clinical Stream */}
               <div className="space-y-4 flex flex-col justify-center">
-                 <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] text-left border-l-2 border-brand-primary pl-3">Détection Temps Réel</p>
+                 <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] text-left border-l-2 border-brand-primary pl-3">
+                   Surveillance Temps Réel
+                 </p>
                  <div className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 text-left space-y-1">
                     <p className="text-brand-secondary font-black text-[10px] uppercase">Stabilité Cardiaque</p>
-                    <p className="text-slate-500 text-[11px] leading-relaxed">Profil de tension systolique optimal sur les 24h glissantes.</p>
+                    <p className="text-slate-500 text-[11px] leading-relaxed">
+                      Profil tensionnel suivi en continu avec seuils d’alerte cliniques.
+                    </p>
                  </div>
                  <div className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 text-left space-y-1">
                     <p className="text-brand-secondary font-black text-[10px] uppercase">Régulation Glycémique</p>
-                    <p className="text-slate-500 text-[11px] leading-relaxed">Index glycémique post-prandial inférieur au seuil critique.</p>
+                    <p className="text-slate-500 text-[11px] leading-relaxed">
+                      Indice post-prandial comparé à des courbes de référence cliniques.
+                    </p>
                  </div>
               </div>
 
               {/* CENTER: Status Shield */}
-              <div className="flex flex-col items-center justify-center py-6">
+              <div className="flex flex-col items-center justify-center py-6 md:border-x md:border-slate-100/70 md:px-8">
                  <div className="w-full max-w-[280px] bg-gradient-to-b from-[#34495E] to-[#2C3E50] rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary via-brand-accent to-brand-primary" />
                     
@@ -171,7 +182,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
                        
                        <div className="flex flex-col items-center">
                           <span className="text-7xl font-black text-white tracking-tighter leading-none">{isLoading ? '--' : (riskData?.healthScore || '85')}</span>
-                          <span className="text-brand-primary/70 text-[10px] font-black uppercase tracking-[0.2em] mt-3">Indice de Résilience</span>
+                          <span className="text-brand-primary/70 text-[10px] font-black uppercase tracking-[0.2em] mt-3">
+                            Indice de Résilience
+                          </span>
                        </div>
 
                        <div className="space-y-2">
@@ -191,7 +204,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
 
               {/* Right Column: AI Insights */}
               <div className="flex flex-col justify-center space-y-4">
-                 <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] text-right border-r-2 border-brand-accent pr-3">Conseil Stratégique</p>
+                 <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] text-right border-r-2 border-brand-accent pr-3">
+                   Insights IA Signables
+                 </p>
                  <div className="p-6 bg-gradient-to-br from-brand-accent/5 to-white rounded-3xl border border-brand-accent/10 shadow-sm text-left relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-3 opacity-5">
                        <svg className="w-8 h-8 text-brand-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V14H15.017C13.3601 14 12.017 12.6569 12.017 11V7C12.017 5.34315 13.3601 4 15.017 4H19.017C20.6738 4 22.017 5.34315 22.017 7V11C22.017 12.6569 20.6738 14 19.017 14V16C19.017 18.2091 17.2261 20 15.017 20L14.017 21Z" /></svg>
