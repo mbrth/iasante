@@ -1,0 +1,7 @@
+{
+  "name": "NutriPath AI - Personalized Chronic Disease Nutrition",
+  "description": "A comprehensive AI-driven SaaS for personalized nutrition management for chronic conditions like Diabetes, Hypertension, and Cardiovascular diseases.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
