@@ -15,6 +15,7 @@ export interface UserProfile {
   height: number;
   weight: number;
   bmi: number;
+  birthDate: string; // Format: YYYY-MM-DD
   pathologies: Pathology[];
   treatments: string[];
   allergies: string[];

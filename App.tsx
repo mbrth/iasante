@@ -12,6 +12,7 @@ import { ProfileView } from './views/ProfileView';
 import { Sidebar } from './components/Sidebar';
 import { UserProfile, Pathology } from './types';
 import { generateMedicalReport } from './services/pdfService';
+import { supabase } from './services/supabaseClient';
 
 type View = 'landing' | 'login' | 'signup' | 'onboarding' | 'dashboard' | 'meals' | 'plan' | 'assistant' | 'profile';
 
@@ -19,55 +20,106 @@ const App: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [currentView, setCurrentView] = useState<View>('landing');
   const [isNewUser, setIsNewUser] = useState(false);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   
-  useEffect(() => {
-    const saved = localStorage.getItem('nutripath_user');
-    if (saved) {
-      setUserProfile(JSON.parse(saved));
-    }
-  }, []);
+  const loadProfileFromSupabase = async () => {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
 
-  const handleUpdateProfile = (newProfile: UserProfile) => {
-    setUserProfile(newProfile);
-    localStorage.setItem('nutripath_user', JSON.stringify(newProfile));
+    if (!session?.user) {
+      setUserProfile(null);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (error || !data) {
+      setUserProfile(null);
+      return;
+    }
+
+    const profile: UserProfile = {
+      age: data.age,
+      sex: data.sex,
+      height: data.height,
+      weight: data.weight,
+      bmi: data.bmi,
+      pathologies: data.pathologies || [],
+      treatments: data.treatments || [],
+      allergies: data.allergies || [],
+      preferences: data.preferences || [],
+      goals: data.goals || [],
+    };
+
+    setUserProfile(profile);
   };
 
-  const handleOnboardingComplete = (profile: UserProfile) => {
+  useEffect(() => {
+    const initAuth = async () => {
+      await loadProfileFromSupabase();
+      setIsAuthReady(true);
+    };
+    initAuth();
+  }, []);
+
+  const handleUpdateProfile = async (newProfile: UserProfile) => {
+    setUserProfile(newProfile);
+    // Met à jour dans Supabase
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
+    if (session?.user) {
+      await supabase.from('profiles').upsert({
+        id: session.user.id,
+        ...newProfile,
+      });
+    }
+  };
+
+  const handleOnboardingComplete = async (profile: UserProfile) => {
     setUserProfile(profile);
-    localStorage.setItem('nutripath_user', JSON.stringify(profile));
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
+
+    if (session?.user) {
+      await supabase.from('profiles').upsert({
+        id: session.user.id,
+        ...profile,
+      });
+    }
+
     setIsNewUser(true); // Déclenche le popup clinique
     setCurrentView('dashboard');
   };
 
-  const handleLoginSuccess = () => {
-    const saved = localStorage.getItem('nutripath_user');
-    if (saved) {
-      setUserProfile(JSON.parse(saved));
-    } else {
-      const mockUser: UserProfile = {
-        age: 42,
-        sex: 'Male',
-        height: 180,
-        weight: 85,
-        bmi: 26.2,
-        pathologies: [Pathology.HYPERTENSION],
-        treatments: [],
-        allergies: [],
-        preferences: ['Méditerranéen'],
-        goals: ['Réduire la tension']
-      };
-      handleUpdateProfile(mockUser);
-    }
+  const handleLoginSuccess = async () => {
+    await loadProfileFromSupabase();
     setIsNewUser(false);
-    setCurrentView('dashboard');
+    // Si pas de profil en BD, rediriger vers onboarding au lieu du dashboard
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
+    
+    if (session?.user) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', session.user.id)
+        .single();
+      
+      setCurrentView(data ? 'dashboard' : 'onboarding');
+    }
   };
 
   const handleSignupSuccess = () => {
     setCurrentView('onboarding');
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setUserProfile(null);
     setCurrentView('landing');
   };
@@ -85,6 +137,16 @@ const App: React.FC = () => {
 
     generateMedicalReport(userProfile, [], plan, riskData);
   };
+
+  if (!isAuthReady) {
+    return (
+      <div className="min-h-screen bg-brand-bg flex items-center justify-center">
+        <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-400">
+          Initialisation de la session...
+        </span>
+      </div>
+    );
+  }
 
   if (currentView === 'landing') {
     return <Landing 
@@ -122,6 +184,16 @@ const App: React.FC = () => {
       />
       
       <main className="flex-1 overflow-y-auto px-6 py-10 md:px-12 bg-brand-primary/5">
+        {!userProfile ? (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <span className="text-xs font-black tracking-[0.3em] uppercase text-slate-400">
+                Chargement de votre profil...
+              </span>
+            </div>
+          </div>
+        ) : (
+        <>
         <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h1 className="text-3xl font-black text-brand-secondary tracking-tight">
@@ -162,8 +234,10 @@ const App: React.FC = () => {
             {currentView === 'meals' && <MealsView />}
             {currentView === 'plan' && userProfile && <NutritionPlanView profile={userProfile} />}
             {currentView === 'assistant' && userProfile && <AssistantView profile={userProfile} />}
-            {currentView === 'profile' && userProfile && <ProfileView profile={userProfile} />}
+            {currentView === 'profile' && userProfile && <ProfileView profile={userProfile} onUpdateProfile={handleUpdateProfile} />}
         </div>
+      </>
+      )}
       </main>
     </div>
   );

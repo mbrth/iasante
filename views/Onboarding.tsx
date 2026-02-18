@@ -13,7 +13,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     allergies: [],
     goals: [],
     preferences: [],
-    treatments: []
+    treatments: [],
+    birthDate: ''
   });
 
   const nextStep = () => setStep(s => s + 1);
@@ -96,6 +97,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                   <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Weight (kg)</label>
                   <input type="number" onChange={e => setProfile({...profile, weight: Number(e.target.value)})} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-brand-primary focus:bg-white transition-all outline-none font-bold text-lg" placeholder="70" />
                 </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Date of Birth</label>
+                  <input type="date" onChange={e => setProfile({...profile, birthDate: e.target.value})} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-brand-primary focus:bg-white transition-all outline-none font-bold text-lg" />
+                </div>
               </div>
               <button onClick={nextStep} className="w-full bg-brand-accent text-white font-black py-5 rounded-[2rem] hover:bg-brand-accent/90 transition-all shadow-xl shadow-brand-accent/20 uppercase tracking-widest text-sm">Continue</button>
             </div>
@@ -137,10 +142,26 @@ export const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           {step === 3 && (
             <div className="space-y-10">
               <div>
-                <h3 className="text-3xl font-black text-brand-secondary tracking-tight mb-2">Your Goals</h3>
-                <p className="text-slate-400 font-medium">Define your primary health objective.</p>
+                <h3 className="text-3xl font-black text-brand-secondary tracking-tight mb-2">Dietary Preferences</h3>
+                <p className="text-slate-400 font-medium">Select your dietary preferences to personalize meal recommendations.</p>
               </div>
               <div className="space-y-3">
+                {['Vegetarian', 'Vegan', 'Low-Carb', 'Gluten-Free', 'Keto', 'Mediterranean', 'High-Protein', 'Low-Sodium'].map(pref => (
+                  <button
+                    key={pref}
+                    onClick={() => toggleArrayItem('preferences', pref)}
+                    className={`w-full text-left px-6 py-4 rounded-2xl text-sm font-bold border-2 transition-all ${
+                      profile.preferences?.includes(pref) 
+                        ? 'bg-brand-primary/10 border-brand-primary text-brand-primary shadow-md translate-x-1' 
+                        : 'bg-white border-slate-100 text-slate-500 hover:border-brand-primary/30'
+                    }`}
+                  >
+                    {pref}
+                  </button>
+                ))}
+              </div>
+              <div className="space-y-3 pt-4 border-t border-slate-100">
+                <h4 className="text-sm font-black text-brand-secondary">Primary Health Goal</h4>
                 {['Stabilize Blood Glucose', 'Lower Blood Pressure', 'Weight Management', 'Reduce Cholesterol'].map(goal => (
                   <button
                     key={goal}

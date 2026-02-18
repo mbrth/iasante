@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { UserProfile, HealthMetrics } from '../types';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -110,18 +109,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
       )}
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {[
-          { label: 'Indice de Poids', value: '78.5', unit: 'kg', color: 'brand-primary' },
-          { label: 'Pic Glucose', value: '94', unit: 'mg/dL', color: 'brand-primary' },
-          { label: 'Tension Moy.', value: '118/76', unit: 'mmHg', color: 'brand-accent' },
-          { label: 'Observance', value: '92', unit: '%', color: 'brand-secondary' },
+          { label: 'Poids', value: profile.weight.toString(), unit: 'kg' },
+          { label: 'IMC', value: profile.bmi.toFixed(1), unit: '' },
+          { label: 'Âge', value: profile.age.toString(), unit: 'ans' },
+          { label: 'Taille', value: profile.height.toString(), unit: 'cm' },
+          { label: 'Né(e)', value: profile.birthDate ? new Date(profile.birthDate).toLocaleDateString('fr-FR') : '-', unit: '' },
         ].map((m, idx) => (
           <div key={idx} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition duration-500 group">
             <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-1 group-hover:text-brand-primary transition-colors">{m.label}</p>
             <div className="flex items-baseline gap-1">
               <span className={`text-2xl font-black text-brand-secondary tracking-tighter`}>{m.value}</span>
-              <span className="text-slate-400 font-bold text-[10px] uppercase">{m.unit}</span>
+              {m.unit && <span className="text-slate-400 font-bold text-[10px] uppercase">{m.unit}</span>}
             </div>
           </div>
         ))}
@@ -223,6 +223,75 @@ export const Dashboard: React.FC<DashboardProps> = ({ profile, isNewUser, onDism
                  </button>
               </div>
            </div>
+        </div>
+      </div>
+
+      {/* Clinical Information Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Pathologies & Treatments */}
+        <div className="grid grid-cols-1 gap-6">
+          <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+            <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Pathologies</p>
+            <div className="space-y-2">
+              {profile.pathologies && profile.pathologies.length > 0 ? (
+                profile.pathologies.map((pathology, idx) => (
+                  <div key={idx} className="px-4 py-2 bg-red-50 rounded-xl border border-red-100">
+                    <p className="text-red-700 text-sm font-bold">{pathology}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400 text-xs italic">Aucune pathologie enregistrée</p>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+            <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Traitements</p>
+            <div className="space-y-2">
+              {profile.treatments && profile.treatments.length > 0 ? (
+                profile.treatments.map((treatment, idx) => (
+                  <div key={idx} className="px-4 py-2 bg-blue-50 rounded-xl border border-blue-100">
+                    <p className="text-blue-700 text-sm font-bold">{treatment}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400 text-xs italic">Aucun traitement enregistré</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Allergies & Preferences */}
+        <div className="grid grid-cols-1 gap-6">
+          <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+            <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Allergies</p>
+            <div className="space-y-2">
+              {profile.allergies && profile.allergies.length > 0 ? (
+                profile.allergies.map((allergy, idx) => (
+                  <div key={idx} className="px-4 py-2 bg-yellow-50 rounded-xl border border-yellow-100">
+                    <p className="text-yellow-700 text-sm font-bold">{allergy}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400 text-xs italic">Aucune allergie enregistrée</p>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+            <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-4">Préférences Alimentaires</p>
+            <div className="space-y-2">
+              {profile.preferences && profile.preferences.length > 0 ? (
+                profile.preferences.map((preference, idx) => (
+                  <div key={idx} className="px-4 py-2 bg-purple-50 rounded-xl border border-purple-100">
+                    <p className="text-purple-700 text-sm font-bold">{preference}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400 text-xs italic">Aucune préférence définie</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
